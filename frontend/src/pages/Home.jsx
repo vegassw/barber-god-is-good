@@ -54,8 +54,8 @@ const Home = () => {
             whileHover={{ scale: 1.05 }}
             className="flex items-center space-x-3"
           >
-            <Scissors className="w-7 h-7 text-amber-500" />
-            <span className="text-2xl font-bold tracking-tight">{barberShopInfo.name}</span>
+            <img src="/logo.jpeg" alt={barberShopInfo.name} className="w-10 h-10 object-contain" />
+            <span className="text-xl md:text-2xl font-bold tracking-tight hidden sm:inline">{barberShopInfo.name}</span>
           </motion.div>
           <nav className="hidden md:flex items-center space-x-12">
             {['Inicio', 'Servicios', 'Barberos', 'Galería', 'Contacto'].map((item) => (
@@ -72,7 +72,7 @@ const Home = () => {
           <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
             <Button 
               onClick={() => navigate('/reservar')} 
-              className="bg-amber-500 hover:bg-amber-600 text-black font-semibold px-6 smooth-transition"
+              className="bg-amber-500 hover:bg-amber-600 text-black font-semibold px-4 md:px-6 text-sm md:text-base smooth-transition"
             >
               Reservar
             </Button>
@@ -127,16 +127,17 @@ const Home = () => {
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2, ease: [0.4, 0, 0.2, 1] }}
-            className="text-7xl md:text-9xl font-bold mb-6 tracking-tighter"
+            className="hero-title-3d mb-6"
+            data-text={barberShopInfo.name}
           >
-            <span className="gradient-text">{barberShopInfo.name}</span>
+            {barberShopInfo.name}
           </motion.h1>
 
           <motion.p
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4, ease: [0.4, 0, 0.2, 1] }}
-            className="text-3xl md:text-4xl text-gray-400 mb-4 font-light"
+            className="text-xl md:text-3xl text-gray-400 mb-4 font-light"
           >
             {barberShopInfo.tagline}
           </motion.p>
@@ -145,7 +146,7 @@ const Home = () => {
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.6, ease: [0.4, 0, 0.2, 1] }}
-            className="text-lg text-gray-500 mb-16 max-w-2xl mx-auto"
+            className="text-base md:text-lg text-gray-500 mb-12 md:mb-16 max-w-2xl mx-auto px-4"
           >
             Una experiencia única donde el estilo y la excelencia se encuentran
           </motion.p>

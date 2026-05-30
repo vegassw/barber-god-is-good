@@ -44,6 +44,70 @@ button {
   transform: scale(1.1);
 }
 
+/* 3D Hero Title Effect - Google Flow Style */
+.hero-title-3d {
+  font-size: clamp(3rem, 10vw, 9rem);
+  font-weight: 900;
+  letter-spacing: -0.05em;
+  line-height: 0.9;
+  text-transform: uppercase;
+  background: linear-gradient(
+    135deg,
+    #ffd700 0%,
+    #ffed4e 25%,
+    #d4af37 50%,
+    #ffed4e 75%,
+    #ffd700 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 
+    0 5px 15px rgba(212, 175, 55, 0.5),
+    0 10px 25px rgba(212, 175, 55, 0.3),
+    0 15px 35px rgba(212, 175, 55, 0.2);
+  filter: drop-shadow(0 0 30px rgba(255, 215, 0, 0.4));
+  animation: shimmer 3s ease-in-out infinite;
+  position: relative;
+}
+
+.hero-title-3d::before {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  background: linear-gradient(
+    135deg,
+    #a67c00 0%,
+    #d4af37 50%,
+    #a67c00 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  transform: translate(4px, 4px);
+  filter: blur(2px);
+  opacity: 0.7;
+}
+
+@keyframes shimmer {
+  0%, 100% {
+    background-position: 0% center;
+  }
+  50% {
+    background-position: 200% center;
+  }
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+  .hero-title-3d {
+    font-size: clamp(2.5rem, 12vw, 4rem);
+  }
+}
+
 /* Text reveal animation */
 @keyframes textReveal {
   from {
