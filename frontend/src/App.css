@@ -27,6 +27,23 @@ button {
   box-shadow: 0 20px 60px rgba(212, 175, 55, 0.2);
 }
 
+/* Gallery image effects */
+.gallery-image {
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.gallery-image img {
+  filter: brightness(0.9) contrast(1.1);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.gallery-image:hover img {
+  filter: brightness(1) contrast(1.2);
+  transform: scale(1.1);
+}
+
 /* Text reveal animation */
 @keyframes textReveal {
   from {

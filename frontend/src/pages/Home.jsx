@@ -414,13 +414,20 @@ const Home = () => {
               <motion.div
                 key={item.id}
                 variants={fadeInUp}
-                whileHover={{ scale: 1.05 }}
-                className="relative h-96 rounded-2xl overflow-hidden group cursor-pointer"
+                whileHover={{ scale: 1.03 }}
+                className="relative h-96 rounded-2xl overflow-hidden group cursor-pointer shadow-2xl"
+                style={{ boxShadow: '0 15px 40px rgba(0, 0, 0, 0.6)' }}
               >
-                <img 
+                <motion.img 
                   src={item.image} 
                   alt={item.title} 
                   className="w-full h-full object-cover"
+                  style={{ filter: 'brightness(0.85) contrast(1.1)' }}
+                  whileHover={{ 
+                    scale: 1.1,
+                    filter: 'brightness(1) contrast(1.2)'
+                  }}
+                  transition={{ duration: 0.5 }}
                 />
                 <motion.div
                   initial={{ opacity: 0 }}
@@ -545,7 +552,7 @@ const Home = () => {
         <div className="container mx-auto px-6">
           <div className="flex flex-col md:flex-row items-center justify-between">
             <div className="flex items-center space-x-3 mb-4 md:mb-0">
-              <Scissors className="w-6 h-6 text-amber-500" />
+              <img src="/logo.jpeg" alt="God is Good" className="w-8 h-8 object-contain" />
               <span className="text-xl font-bold">{barberShopInfo.name}</span>
             </div>
             <p className="text-gray-500">

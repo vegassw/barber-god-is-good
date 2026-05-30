@@ -7,7 +7,7 @@ import { Calendar } from '../components/ui/calendar';
 import { Label } from '../components/ui/label';
 import { Input } from '../components/ui/input';
 import { useNavigate } from 'react-router-dom';
-import { barbers, services, availableSlots } from '../mock';
+import { barbers, services, generateAvailableSlots } from '../mock';
 import { useToast } from '../hooks/use-toast';
 
 const Booking = () => {
@@ -22,18 +22,9 @@ const Booking = () => {
   const [customerPhone, setCustomerPhone] = useState('');
   const [customerEmail, setCustomerEmail] = useState('');
 
-  const formatDate = (date) => {
-    if (!date) return '';
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
-  };
-
   const getAvailableTimes = () => {
     if (!selectedDate) return [];
-    const dateStr = formatDate(selectedDate);
-    return availableSlots[dateStr] || [];
+    return generateAvailableSlots(selectedDate);
   };
 
   const handleConfirmBooking = () => {
@@ -55,8 +46,8 @@ const Booking = () => {
   };
 
   const canProceedToNextStep = () => {
-    if (step === 1) return selectedService !== null;
-    if (step === 2) return selectedBarber !== null;
+    if (step === 1) return selectedBarber !== null;
+    if (step === 2) return selectedService !== null;
     if (step === 3) return selectedDate !== null && selectedTime !== null;
     return false;
   };
@@ -110,8 +101,8 @@ const Booking = () => {
                   <p className={`mt-3 text-sm font-medium ${
                     step >= stepNum ? 'text-amber-500' : 'text-gray-600'
                   }`}>
-                    {stepNum === 1 && 'Servicio'}
-                    {stepNum === 2 && 'Barbero'}
+                    {stepNum === 1 && 'Barbero'}
+                    {stepNum === 2 && 'Servicio'}
                     {stepNum === 3 && 'Fecha'}
                     {stepNum === 4 && 'Confirmar'}
                   </p>
@@ -132,9 +123,65 @@ const Booking = () => {
         </div>
 
         <AnimatePresence mode="wait">
-          {/* Step 1: Service */}
+          {/* Step 1: Barber */}
           {step === 1 && (
             <motion.div key="step1" {...fadeInUp}>
+              <h2 className="text-3xl font-bold mb-8">Selecciona tu Barbero</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {barbers.map((barber) => (
+                  <motion.div
+                    key={barber.id}
+                    whileHover={{ scale: 1.03, y: -5 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <Card 
+                      onClick={() => setSelectedBarber(barber)}
+                      className={`cursor-pointer smooth-transition overflow-hidden ${
+                        selectedBarber?.id === barber.id
+                          ? 'glass border-amber-500 shadow-lg shadow-amber-500/20'
+                          : 'glass border-amber-500/10 hover:border-amber-500/30'
+                      }`}
+                    >
+                      <div className="relative h-64">
+                        <img 
+                          src={barber.image} 
+                          alt={barber.name} 
+                          className="w-full h-full object-cover"
+                        />
+                        {selectedBarber?.id === barber.id && (
+                          <motion.div
+                            initial={{ scale: 0 }}
+                            animate={{ scale: 1 }}
+                            className="absolute top-3 right-3 bg-amber-500 rounded-full p-2"
+                          >
+                            <Check className="w-5 h-5 text-black" />
+                          </motion.div>
+                        )}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
+                        <div className="absolute bottom-0 left-0 right-0 p-4">
+                          <h3 className="text-xl font-bold mb-1">{barber.name}</h3>
+                          <p className="text-amber-500 text-sm">{barber.experience}</p>
+                        </div>
+                      </div>
+                      <CardContent className="pt-4">
+                        <div className="flex flex-wrap gap-2">
+                          {barber.specialties.slice(0, 2).map((specialty, idx) => (
+                            <span key={idx} className="text-xs bg-amber-500/10 text-amber-500 px-2 py-1 rounded">
+                              {specialty}
+                            </span>
+                          ))}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+          )}
+
+          {/* Step 2: Service */}
+          {step === 2 && (
+            <motion.div key="step2" {...fadeInUp}>
               <h2 className="text-3xl font-bold mb-8">Selecciona tu Servicio</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {services.map((service) => (
@@ -152,6 +199,11 @@ const Booking = () => {
                       }`}
                     >
                       <CardHeader>
+                        {service.popular && (
+                          <span className="text-xs bg-amber-500 text-black px-2 py-1 rounded-full w-fit mb-2 font-semibold">
+                            Más Popular
+                          </span>
+                        )}
                         <CardTitle className="text-xl">{service.name}</CardTitle>
                         <CardDescription className="text-gray-400">{service.description}</CardDescription>
                       </CardHeader>
@@ -182,53 +234,6 @@ const Booking = () => {
             </motion.div>
           )}
 
-          {/* Step 2: Barber */}
-          {step === 2 && (
-            <motion.div key="step2" {...fadeInUp}>
-              <h2 className="text-3xl font-bold mb-8">Selecciona tu Barbero</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {barbers.map((barber) => (
-                  <motion.div
-                    key={barber.id}
-                    whileHover={{ scale: 1.03, y: -5 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    <Card 
-                      onClick={() => setSelectedBarber(barber)}
-                      className={`cursor-pointer smooth-transition overflow-hidden ${
-                        selectedBarber?.id === barber.id
-                          ? 'glass border-amber-500 shadow-lg shadow-amber-500/20'
-                          : 'glass border-amber-500/10 hover:border-amber-500/30'
-                      }`}
-                    >
-                      <div className="relative h-56">
-                        <img 
-                          src={barber.image} 
-                          alt={barber.name} 
-                          className="w-full h-full object-cover"
-                        />
-                        {selectedBarber?.id === barber.id && (
-                          <motion.div
-                            initial={{ scale: 0 }}
-                            animate={{ scale: 1 }}
-                            className="absolute top-3 right-3 bg-amber-500 rounded-full p-2"
-                          >
-                            <Check className="w-5 h-5 text-black" />
-                          </motion.div>
-                        )}
-                        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
-                      </div>
-                      <CardHeader>
-                        <CardTitle>{barber.name}</CardTitle>
-                        <CardDescription className="text-amber-500">{barber.experience}</CardDescription>
-                      </CardHeader>
-                    </Card>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
-          )}
-
           {/* Step 3: Date & Time */}
           {step === 3 && (
             <motion.div key="step3" {...fadeInUp}>
@@ -245,7 +250,10 @@ const Booking = () => {
                     <Calendar
                       mode="single"
                       selected={selectedDate}
-                      onSelect={setSelectedDate}
+                      onSelect={(date) => {
+                        setSelectedDate(date);
+                        setSelectedTime(null); // Reset time when date changes
+                      }}
                       disabled={(date) => date < new Date()}
                       className="rounded-md border border-amber-500/20"
                     />
@@ -260,15 +268,16 @@ const Booking = () => {
                     </CardTitle>
                     <CardDescription>
                       {selectedDate 
-                        ? selectedDate.toLocaleDateString('es-CL') 
+                        ? selectedDate.toLocaleDateString('es-CL', { weekday: 'long', day: 'numeric', month: 'long' })
                         : 'Selecciona primero una fecha'}
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
                     {!selectedDate ? (
-                      <p className="text-gray-500 text-center py-8">Selecciona una fecha</p>
-                    ) : getAvailableTimes().length === 0 ? (
-                      <p className="text-gray-500 text-center py-8">Sin horarios disponibles</p>
+                      <div className="text-center py-12">
+                        <CalendarIcon className="w-12 h-12 text-gray-600 mx-auto mb-3" />
+                        <p className="text-gray-500">Selecciona una fecha</p>
+                      </div>
                     ) : (
                       <div className="grid grid-cols-3 gap-3">
                         {getAvailableTimes().map((time) => (
@@ -305,18 +314,19 @@ const Booking = () => {
                   <CardContent className="space-y-4">
                     <div className="p-4 glass rounded-xl">
                       <div className="flex items-center mb-2">
+                        <User className="w-5 h-5 text-amber-500 mr-3" />
+                        <p className="font-semibold">Barbero</p>
+                      </div>
+                      <p className="text-gray-400 ml-8">{selectedBarber?.name}</p>
+                      <p className="text-amber-500 text-sm ml-8">{selectedBarber?.experience}</p>
+                    </div>
+                    <div className="p-4 glass rounded-xl">
+                      <div className="flex items-center mb-2">
                         <Scissors className="w-5 h-5 text-amber-500 mr-3" />
                         <p className="font-semibold">Servicio</p>
                       </div>
                       <p className="text-gray-400 ml-8">{selectedService?.name}</p>
                       <p className="text-amber-500 font-bold ml-8">${selectedService?.price.toLocaleString('es-CL')}</p>
-                    </div>
-                    <div className="p-4 glass rounded-xl">
-                      <div className="flex items-center mb-2">
-                        <User className="w-5 h-5 text-amber-500 mr-3" />
-                        <p className="font-semibold">Barbero</p>
-                      </div>
-                      <p className="text-gray-400 ml-8">{selectedBarber?.name}</p>
                     </div>
                     <div className="p-4 glass rounded-xl">
                       <div className="flex items-center mb-2">
