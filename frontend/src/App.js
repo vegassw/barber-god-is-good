@@ -8,7 +8,7 @@ import { Toaster } from "./components/ui/sonner";
 function App() {
   return (
     <div className="App">
-      <BrowserRouter>
+      <BrowserRouter basename="/barber-god-is-good">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/reservar" element={<Booking />} />
