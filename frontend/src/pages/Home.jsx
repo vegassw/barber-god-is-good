@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
-import { Calendar, Star, MapPin, Phone, Mail, Scissors, ArrowRight, Sparkles, Award } from 'lucide-react';
+import { Calendar, Star, MapPin, Phone, Mail, Scissors, ArrowRight, Sparkles, Award, Menu, X } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
@@ -10,6 +10,7 @@ import { barberShopInfo, services, barbers, testimonials, gallery, products } fr
 const Home = () => {
   const navigate = useNavigate();
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, { stiffness: 100, damping: 30 });
 
@@ -68,7 +69,16 @@ const Home = () => {
               </motion.a>
             ))}
           </nav>
-          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+          
+          {/* Mobile menu button */}
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="md:hidden text-white p-2"
+          >
+            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </button>
+          
+          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="hidden md:block">>
             <Button 
               onClick={() => navigate('/reservar')} 
               className="bg-amber-500 hover:bg-amber-600 text-black font-semibold px-4 md:px-6 text-sm md:text-base smooth-transition"
@@ -78,6 +88,32 @@ const Home = () => {
           </motion.div>
         </div>
       </motion.header>
+
+      {/* Mobile menu */}
+      <motion.div
+        initial={false}
+        animate={{ height: mobileMenuOpen ? 'auto' : 0, opacity: mobileMenuOpen ? 1 : 0 }}
+        className="fixed top-20 left-0 right-0 z-30 glass overflow-hidden md:hidden"
+      >
+        <nav className="flex flex-col p-6 space-y-4">
+          {['Inicio', 'Servicios', 'Barberos', 'Galería', 'Contacto'].map((item) => (
+            <a
+              key={item}
+              href={`#${item.toLowerCase()}`}
+              onClick={() => setMobileMenuOpen(false)}
+              className="text-lg font-medium text-white hover:text-amber-500 smooth-transition py-2"
+            >
+              {item}
+            </a>
+          ))}
+          <Button 
+            onClick={() => { setMobileMenuOpen(false); navigate('/reservar'); }} 
+            className="bg-amber-500 hover:bg-amber-600 text-black font-semibold w-full"
+          >
+            Reservar Ahora
+          </Button>
+        </nav>
+      </motion.div>
 
       {/* Hero Section */}
       <section id="inicio" className="relative min-h-screen flex items-center justify-center pt-20">

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Calendar as CalendarIcon, Clock, User, Scissors, ArrowLeft, Check, ChevronRight } from 'lucide-react';
 import { Button } from '../components/ui/button';
@@ -51,6 +51,11 @@ const Booking = () => {
     if (step === 3) return selectedDate !== null && selectedTime !== null;
     return false;
   };
+
+  // Scroll to top when step changes
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [step]);
 
   const fadeInUp = {
     initial: { opacity: 0, y: 30 },
@@ -401,27 +406,26 @@ const Booking = () => {
           )}
         </AnimatePresence>
 
-        {/* Navigation */}
+        {/* Navigation - Sticky on mobile */}
         {step < 4 && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="mt-12 flex justify-end"
-          >
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+          <div className="fixed bottom-0 left-0 right-0 z-50 p-4 glass md:relative md:mt-12 md:flex md:justify-end md:p-0 md:bg-transparent">
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="w-full md:w-auto">
               <Button 
                 onClick={() => setStep(step + 1)}
                 disabled={!canProceedToNextStep()}
                 size="lg"
-                className="bg-amber-500 hover:bg-amber-600 text-black font-bold px-10 rounded-full disabled:opacity-50"
+                className="w-full md:w-auto bg-amber-500 hover:bg-amber-600 text-black font-bold px-10 rounded-full disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Continuar
                 <ChevronRight className="w-5 h-5 ml-2" />
               </Button>
             </motion.div>
-          </motion.div>
+          </div>
         )}
       </div>
+      
+      {/* Spacer for fixed button on mobile */}
+      {step < 4 && <div className="h-24 md:hidden" />}
     </div>
   );
 };
