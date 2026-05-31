@@ -54,7 +54,7 @@ const Home = () => {
             whileHover={{ scale: 1.05 }}
             className="flex items-center"
           >
-            <img src="/logo.jpeg" alt={barberShopInfo.name} className="h-14 w-auto object-contain" />
+            <img src={`${process.env.PUBLIC_URL}/logo.jpeg`} alt={barberShopInfo.name} className="h-14 w-auto object-contain" />
           </motion.div>
           <nav className="hidden md:flex items-center space-x-12">
             {['Inicio', 'Servicios', 'Barberos', 'Galería', 'Contacto'].map((item) => (
@@ -552,7 +552,7 @@ const Home = () => {
         <div className="container mx-auto px-6">
           <div className="flex flex-col md:flex-row items-center justify-between">
             <div className="flex items-center space-x-3 mb-4 md:mb-0">
-              <img src="/logo.jpeg" alt="God is Good" className="w-8 h-8 object-contain" />
+              <img src={`${process.env.PUBLIC_URL}/logo.jpeg`} alt="God is Good" className="w-8 h-8 object-contain" />
               <span className="text-xl font-bold">{barberShopInfo.name}</span>
             </div>
             <p className="text-gray-500">
